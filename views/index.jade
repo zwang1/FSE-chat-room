@@ -1,0 +1,22 @@
+doctype html
+html
+    head
+        link(rel='stylesheet', href='/css/style.css')
+        script(src='//code.jquery.com/jquery-1.11.0.min.js')
+        script(src='/socket.io/socket.io.js')
+        script(src='/js/index.js')
+        title My FSE Chatroom
+    body
+        ul(class= "pages")
+            li(class = "login page")
+                div(class="form")
+                    h3(class="title") Login with your name
+                    input(class="username", type="text" maxlength="14")
+                    input(class = "login", type="button", value="Login")
+            li(class = "chat page")
+                input(class = "leave", type="button", value="Leave")
+                div(class = "chatArea")
+                    ul(class = "message")
+                    input(class="inputMessage", placeholder="Type here...")
+                    input(class = "postbutton", type="button", value="Post")
+
