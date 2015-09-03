@@ -6,27 +6,56 @@ function init() {
     var loginStatus = false;
     var myUserName;
     var sessionId;
+    var message;
+    var $messageList = $('.messages');
 
 
     var socket = io();
 
     function loginNewUser(){
         myUserName = $('.username').val().trim();
-        $('.login.page').fadeOut();
-        $('.chat.page').show();
-        $('.login.page').off('click');
-        loginStatus = true;
+    if(myUserName)
         socket.emit('newuser', {id: sessionId, name: myUserName});
 
     }
 
-    function sendMessage(){}
+    function sendMessage(){
+        console.log('sendMesage function called');
+        message = $('.inputMessage').val();
 
-    function updateMessage(){}
+ //TODO -----------changethe true  to loginStatus
+        if( true && message) {
+             var sendTime = new Date();
+            $('.inputMessage').val('');
+            updateMessage({username: 'Me', message: message, time: sendTime});
+            socket.emit('IHaveSomethingNew', {id: sessionId, name:myUserName});
+        }
+    }
+
+    function updateMessage(data){
+        var $usernameDiv = $('<span class="username" />')
+            .text(data.username);
+        var $messageDiv = $('<span class="message" />')
+            .text(data.message);
+        var $sendTimeDiv = $('<span class="sendtime" />')
+                .text(data.time);
+
+        var $newMessageSectionDiv = $('<li class="newMessageSection"/>')
+            .append($usernameDiv, $sendTimeDiv)
+            .append($messageDiv);
+
+        $messageList.append($newMessageSectionDiv);
+    }
 
     function reloadMessage(){}
 
-    function leaveRoom(){}
+    function leaveRoom(){
+        console.log("funcion leave called");
+    }
+
+
+
+
 
 
 
@@ -45,10 +74,23 @@ function init() {
         //call function load reloadmessage();
     });
 
+    socket.on('newuseraccepted', function(){
+        $('.login.page').fadeOut();
+        $('.chat.page').show();
+        $('.login.page').off('click');
+        loginStatus = true;
+        reloadMessage();
+    });
+
+    socket.on('newmessagecoming',function(data){
+        updateMessage();
+    });
+
     //input
 
-    $('.login').on('click', loginNewUser());
+    $('.login').on('click', loginNewUser);
     $('.postbutton').on('click', sendMessage);
+    $('.leave').on('click',leaveRoom);
 
 }
 
