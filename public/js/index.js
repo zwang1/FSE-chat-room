@@ -20,7 +20,7 @@ function init() {
     }
 
     function sendMessage(){
-        console.log('sendMesage function called');
+
         message = $('.inputMessage').val();
 
  //TODO -----------changethe true  to loginStatus
@@ -47,10 +47,20 @@ function init() {
         $messageList.append($newMessageSectionDiv);
     }
 
-    function reloadMessage(){}
+
+    function reloadMessage(){
+        //get back latest 10 record from sqlite record
+        //for each record call updateMessage
+    }
+
+
 
     function leaveRoom(){
-        console.log("funcion leave called");
+        $('.chat.page').fadeOut();
+        $('.login.page').show();
+        $('.chat.page').off('click');
+        loginStatus = false;
+        $('.username').val('');
     }
 
 
