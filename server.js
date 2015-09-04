@@ -44,21 +44,31 @@ var currentusers = {};
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('database');
 
+db.serialize(function(){
+    db.run('CREATE TABLE IF NOT EXISTS chatting (name TEXT, message TEXT, time DATE)');
+
+});
 
 
 // Socket.IO events
 io.on('connection', function(socket){
     socket.on('newuser',function(data){
-        if(currentusers.has(data.name)){
+        console.log(JSON.stringify(data));
+        if(currentusers.hasOwnProperty(data.name)){
             io.sockets.emit('newuserdenied');
         }
         // TODO ---------if name is in DB,get all messages and emit to client---ONLY this client
-        else if(){
-
+        else {
+            db.run('SELECT name WHERE name = "' + data.name + '"',function(err, data){
+                if(!err){
+                    io.sockets.connected[data.id].emit('returninguser',{mess:'tes'});
+                    //TODO--------
+                }
+            });
         }
         currentusers[data.name] = data.id;
 
-        io.sockets.socket(data.id).emit('newuseraccepted');
+        io.sockets.connected[data.id].emit('newuseraccepted');
         console.log('new user login' + data.name);
     })
 
@@ -70,8 +80,8 @@ io.on('connection', function(socket){
     });
 
     socket.on('IHaveSomethingNew',function(data){
-        socket.emit.broadcast('newmessagecoming',data);
-        //TODO---insert into DB
+        socket.broadcast.emit('newmessagecoming',data);
+        db.run('INSERT INTO chatting (name, message, time) VALUES(?,?,?)', [data.name, data.message, data.time]);
     })
 
 

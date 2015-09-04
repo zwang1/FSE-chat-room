@@ -14,8 +14,8 @@ function init() {
     //function of login to chatroom
     function loginNewUser(){
         myUserName = $('.username').val().trim();
-    if(myUserName)
-        socket.emit('newuser', {id: sessionId, name: myUserName});
+        if(myUserName)
+            socket.emit('newuser', {id: sessionId, name: myUserName});
 
     }
 
@@ -28,8 +28,8 @@ function init() {
         if( true && message) {
              var sendTime = new Date();
             $('.inputMessage').val('');
-            updateMessage({username: 'Me', message: message, time: sendTime});
-            socket.emit('IHaveSomethingNew', {id: sessionId, name:myUserName, message:message});
+            updateMessage({name: 'Me', message: message, time: sendTime});
+            socket.emit('IHaveSomethingNew', {id: sessionId, name:myUserName, message:message, time: sendTime});
         }
     }
 
@@ -37,7 +37,7 @@ function init() {
     //update the message list to add new coming messages
     function updateMessage(data){
         var $usernameDiv = $('<span class="username" />')
-            .text(data.username);
+            .text(data.name);
         var $messageDiv = $('<span class="message" />')
             .text(data.message);
         var $sendTimeDiv = $('<span class="sendtime" />')
@@ -76,7 +76,10 @@ function init() {
 
 
    //socket on
-
+    socket.on('connect', function () {
+        sessionId = socket.io.engine.id;
+        console.log('Connected ' + sessionId);
+    });
     socket.on('newuseraccepted',function(){
         loginStatus = true;
         console.log('user' + myUserName + 'is successfully login');
@@ -99,7 +102,7 @@ function init() {
     });
 
     socket.on('newmessagecoming',function(data){
-        updateMessage();
+        updateMessage(data );
     });
 
     //input
