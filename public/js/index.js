@@ -47,15 +47,21 @@ function init() {
 
         timeInString=timeInString.substr(start,5);
 
-        var $usernameDiv = $('<span class="name" />')
+
+
+        var $usernameDiv = $('<div class="name col-sm-6" />')
             .text(data.name);
-        var $messageDiv = $('<p class="message" />')
-            .text(data.message);
-        var $sendTimeDiv = $('<span class="sendtime" />')
+
+        var $sendTimeDiv = $('<div class="sendtime col-sm-6" />')
                 .text(timeInString);
 
+        var $messageDiv = $('<p class="message" />')
+            .text(data.message);
+
+        var $row = $('<div class= "row"/>').append($usernameDiv,$sendTimeDiv);
+
         var $newMessageSectionDiv = $('<li class="newMessageSection"/>')
-            .append($usernameDiv, $sendTimeDiv)
+            .append($row)
             .append($messageDiv);
 
         $messageList.append($newMessageSectionDiv);
