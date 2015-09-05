@@ -49,14 +49,11 @@ db.serialize(function(){
 
 });
 
-db.get('select * from chatting', function(err,row){
-    console.log('hhhhh');
-})
 
 
 // Socket.IO events
 io.on('connection', function(socket){
-    console.log('hhhhh111');
+    console.log('socket connected');
 
 
 
@@ -121,6 +118,8 @@ io.on('connection', function(socket){
     });
 
     socket.on('IHaveSomethingNew',function(data){
+        console.log(typeof(data.time));
+        data.time.t
         socket.broadcast.emit('newmessagecoming',data);
         db.run('INSERT INTO chatting (name, message, time) VALUES(?,?,?)', [data.name, data.message, data.time]);
     })

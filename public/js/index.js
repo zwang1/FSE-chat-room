@@ -36,12 +36,23 @@ function init() {
 
     //update the message list to add new coming messages
     function updateMessage(data){
-        var $usernameDiv = $('<span class="username" />')
+        var timeInString = '';
+        var start = 11;
+        if(data.name=== "Me"){
+            timeInString = data.time.toString();
+            start = 16;
+        }
+        else
+        timeInString = data.time;
+
+        timeInString=timeInString.substr(start,5);
+
+        var $usernameDiv = $('<span class="name" />')
             .text(data.name);
-        var $messageDiv = $('<span class="message" />')
+        var $messageDiv = $('<p class="message" />')
             .text(data.message);
         var $sendTimeDiv = $('<span class="sendtime" />')
-                .text(data.time);
+                .text(timeInString);
 
         var $newMessageSectionDiv = $('<li class="newMessageSection"/>')
             .append($usernameDiv, $sendTimeDiv)
@@ -110,7 +121,7 @@ function init() {
 
     //input
 
-    $('.login').on('click', loginNewUser);
+    $('.login.btn').on('click', loginNewUser);
     $('.postbutton').on('click', sendMessage);
     $('.leave').on('click',leaveRoom);
 

@@ -8,16 +8,18 @@ html
         link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
         title My FSE Chatroom
     body
-        ul(class= "pages")
-            // li(class = "login page")
-                div(class="form")
-                    h3(class="title") Login with your name
-                    input(class="username", type="text" maxlength="14")
-                    button(class = "login btn btn-sm btn-default", type="button") Login
-            li(class = "chat page")
-                input(class = "leave", type="button", value="Leave")
-                div(class = "chatArea")
-                    ul(class = "messages")
-                    input(class="inputMessage", placeholder="Type here...")
-                    input(class = "postbutton", type="button", value="Post")
+
+        div(class = "container")
+            h1(class= "header black-bg") Welcome to FSE chatroom
+            form(class = "login page form-signin")
+                h3(class="form-signin-heading") Login with your name
+                input(class="username form-control" type="text" required autofocus)
+                button(class = "login btn btn-lg btn-primary btn-block", type="button") Enter chatroom
+                div(class = "failed", style="color: red") Please use another one
+            form(class = "chat page")
+                    input(class = "leave", type="button", value="Leave")
+                    div(class = "chatArea")
+                        ul(class = "messages")
+                        input(class="inputMessage", placeholder="Type here...")
+                        button(class = "postbutton", type="button", value="Post")
 
