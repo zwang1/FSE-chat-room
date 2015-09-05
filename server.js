@@ -49,34 +49,75 @@ db.serialize(function(){
 
 });
 
+db.get('select * from chatting', function(err,row){
+    console.log('hhhhh');
+})
+
 
 // Socket.IO events
 io.on('connection', function(socket){
+    console.log('hhhhh111');
+
+
+
+    //when a new user login request comes
     socket.on('newuser',function(data){
-        console.log(JSON.stringify(data));
+
+        this.db = db;
+
+        //if same name has login in current user list, deny
         if(currentusers.hasOwnProperty(data.name)){
             io.sockets.emit('newuserdenied');
+            console.log('one user denied');
         }
         // TODO ---------if name is in DB,get all messages and emit to client---ONLY this client
         else {
-            db.run('SELECT name WHERE name = "' + data.name + '"',function(err, data){
-                if(!err){
-                    io.sockets.connected[data.id].emit('returninguser',{mess:'tes'});
-                    //TODO--------
-                }
+            var nameExist = false;
+            db.get('SELECT *  FROM chatting ', function(err,row){
+                nameExist = true;
             });
-        }
-        currentusers[data.name] = data.id;
+            db.get('select * from chatting', function(err,row){
+                console.log('hhhhh');
+            });
+            if(nameExist ){
+                console.log(row.name + 'returned');
+                var dt = new Date();
+                dt.setDate(dt.getDate() - 1);
+                console.log('dt');
+                db.all('SELECT name, message,time FROM chatting WHERE name = ?', [data.name],function(err, row){
+                    console.log(row.name  + row.message + row.time);
+                    //io.sockets.connected[data.id].emit('returninguser',{mess:'i will give you all messages'});
+                });
 
-        io.sockets.connected[data.id].emit('newuseraccepted');
-        console.log('new user login' + data.name);
+                //TODO--------
+            }
+            else
+            {
+                currentusers[data.name] = data.id;
+                io.sockets.connected[data.id].emit('newuseraccepted');
+                console.log('new user login' + data.name);
+            }
+
+        }
+
     })
 
 
-    //TODO ---how if user disconnect by close the webpage
+
     socket.on('leaveRoom', function(data) {
-        delete currentusers[socket.name];
-        console.log('a user left'+ socket.name);
+        delete currentusers[data.name];
+        console.log('a user left  '+ data.name);
+    });
+
+    socket.on('disconnect', function() {
+        for (var k in currentusers){
+            if (currentusers[k] === this.id){
+                delete currentusers[k];
+                console.log('a user left   '+ k);
+                break;
+            }
+        }
+
     });
 
     socket.on('IHaveSomethingNew',function(data){

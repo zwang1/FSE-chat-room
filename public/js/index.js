@@ -24,8 +24,8 @@ function init() {
 
         message = $('.inputMessage').val();
 
- //TODO -----------changethe true  to loginStatus
-        if( true && message) {
+
+        if( loginStatus && message) {
              var sendTime = new Date();
             $('.inputMessage').val('');
             updateMessage({name: 'Me', message: message, time: sendTime});
@@ -50,7 +50,7 @@ function init() {
         $messageList.append($newMessageSectionDiv);
     }
 
-//reload messages for re-entering user
+//TODO---------reload messages for re-entering user
     function reloadMessage(){
         //get back latest 10 record from sqlite record
         //for each record call updateMessage
@@ -70,34 +70,37 @@ function init() {
 
 // TODO ----show instructions in red little font
     function tryAnotherUserName(){
-
+        $('.failed').show();
+        $('.username').val('');
     }
 
 
 
    //socket on
+
+    //connected
     socket.on('connect', function () {
         sessionId = socket.io.engine.id;
         console.log('Connected ' + sessionId);
     });
-    socket.on('newuseraccepted',function(){
-        loginStatus = true;
-        console.log('user' + myUserName + 'is successfully login');
-        //call function load reloadmessage();
-    });
 
+
+
+
+    //new user have the same name as someone currently in chatroom
     socket.on('newuserdenied', tryAnotherUserName);
 
+    //new user login accepted
     socket.on('newuseraccepted', function(){
         $('.login.page').fadeOut();
         $('.chat.page').show();
         $('.login.page').off('click');
+        $('.failed').off();
         loginStatus = true;
     });
 
     //if the user re-enter the chatroom, reload previous message
     socket.on('returninguser',function(data){
-       if(data.name === myUserName)
             reloadMessage();
     });
 

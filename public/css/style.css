@@ -1,0 +1,156 @@
+
+body {
+
+    background-color: #eee;
+    height: 100px;
+}
+/* Login Page */
+.black-bg{
+    position: fixed;
+    top:0;
+    background-color: #72a435;
+    color:#fff;
+}
+
+.header{
+    position:fixed;
+    margin-top: 0;
+    left:0;
+    right:0;
+    text-align: center;
+
+}
+
+.form-signin {
+    position:fixed;
+    top:150px;
+    right:40px;
+    left:40px;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading, {
+    margin-bottom: 10px;
+}
+
+/*
+ul {
+    list-style: none;
+    word-wrap: break-word;
+}*/
+
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+
+.failed{
+    margin-top : 10px;
+    display: none;
+}
+
+
+.title {
+    font-size: 150%;
+    color: #000;
+    font-weight: 200;
+    text-align: center;
+}
+
+
+
+.username {
+    top: 0px;
+    bottom: 30px;
+    height: 60px;
+    font-weight: 700;
+    overflow: hidden;
+    padding-right: 15px;
+    text-align: left;
+}
+
+.login{
+    margin-top : 10px;
+    top: 30px;
+}
+
+
+/* Chat page */
+
+.chat.page {
+    display: none;
+}
+
+
+
+/* Font */
+
+.messages {
+    font-size: 150%;
+}
+
+.inputMessage {
+    font-size: 100%;
+}
+
+.log {
+    color: gray;
+    font-size: 70%;
+    margin: 5px;
+    text-align: center;
+}
+
+/* Messages */
+
+.chatArea {
+    height: 100%;
+    padding-bottom: 60px;
+}
+
+.messages {
+    height: 100%;
+    margin: 0;
+    overflow-y: scroll;
+    padding: 10px 20px 10px 20px;
+}
+
+.message.typing .messageBody {
+    color: gray;
+}
+
+/* Input */
+
+.inputMessage {
+
+    bottom: 30px;
+    height: 60px;
+    left: 0;
+    outline: none;
+    padding-left: 10px;
+    right: 0;
+    width: 80%;
+}
+
+.Postbutton {
+
+    width: 30%;
+}
