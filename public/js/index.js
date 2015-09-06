@@ -26,34 +26,32 @@ function init() {
 
 
         if( loginStatus && message) {
-             var sendTime = new Date();
+            var Time = new Date();
+            var TimeString = Time.toTimeString();
+
+            console.log(TimeString);
+
             $('.inputMessage').val('');
-            updateMessage({name: 'Me', message: message, time: sendTime});
-            socket.emit('IHaveSomethingNew', {id: sessionId, name:myUserName, message:message, time: sendTime});
+            updateMessage({name: 'Me', message: message, time: TimeString});
+            socket.emit('IHaveSomethingNew', {id: sessionId, name:myUserName, message:message, time: TimeString});
+
         }
     }
 
 
     //update the message list to add new coming messages
     function updateMessage(data){
-        var timeInString = '';
-        var start = 11;
-        if(data.name=== "Me"){
-            timeInString = data.time.toString();
-            start = 16;
-        }
-        else
-        timeInString = data.time;
 
-        timeInString=timeInString.substr(start,5);
-
+        var sender = data.name;
+        if(sender=== myUserName)
+        sender = "Me";
 
 
         var $usernameDiv = $('<div class="name col-sm-6" />')
             .text(data.name);
 
         var $sendTimeDiv = $('<div class="sendtime col-sm-6" />')
-                .text(timeInString);
+                .text(data.time.substring(0,5));
 
         var $messageDiv = $('<p class="message" />')
             .text(data.message);
@@ -68,9 +66,13 @@ function init() {
     }
 
 //TODO---------reload messages for re-entering user
-    function reloadMessage(){
+    function reloadMessage(data){
         //get back latest 10 record from sqlite record
         //for each record call updateMessage
+        var mess = JSON.parse(data.mess);
+        for(var i = 0; i < mess.length; i++){
+            updateMessage(mess[i]);
+        }
     }
 
 
@@ -112,17 +114,20 @@ function init() {
         $('.login.page').fadeOut();
         $('.chat.page').show();
         $('.login.page').off('click');
-        $('.failed').off();
+        $('.failed').fadeOut();
         loginStatus = true;
     });
 
     //if the user re-enter the chatroom, reload previous message
     socket.on('returninguser',function(data){
-            reloadMessage();
+        console.log("return user.")
+        reloadMessage(data);
     });
 
     socket.on('newmessagecoming',function(data){
-        updateMessage(data );
+
+        if(loginStatus)
+        updateMessage(data);
     });
 
     //input

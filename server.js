@@ -16,8 +16,7 @@ var express = require('express'),
     app = express(),
     httpserver = require('http').createServer(app),
     io = require('socket.io')(httpserver),
-    bodyParser = require('body-parser'),
-    _ = require('underscore');
+    bodyParser = require('body-parser');
 
 
 // Server config
@@ -45,62 +44,47 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('database');
 
 db.serialize(function(){
-    db.run('CREATE TABLE IF NOT EXISTS chatting (name TEXT, message TEXT, time DATE)');
+    db.run('CREATE TABLE IF NOT EXISTS chatting (name TEXT, message TEXT, time TEXT)');
 
 });
 
+function checkNameAndSendMessages(name){
+    db.get('SELECT name FROM chatting WHERE name = ?', name, function(err,row){
+        if (row) {
+            console.log('user exists in data and retrieve all messages from the database.');
+
+            db.all('SELECT name, message,time FROM chatting limit 10', function (err, row) {
+
+                console.log(JSON.stringify(row));
+                io.sockets.connected[currentusers[name]].emit('returninguser', {mess: JSON.stringify(row)});
+
+            });
+        }
+    });
+}
 
 
 // Socket.IO events
 io.on('connection', function(socket){
     console.log('socket connected');
 
-
-
     //when a new user login request comes
     socket.on('newuser',function(data){
-
-        this.db = db;
 
         //if same name has login in current user list, deny
         if(currentusers.hasOwnProperty(data.name)){
             io.sockets.emit('newuserdenied');
             console.log('one user denied');
         }
-        // TODO ---------if name is in DB,get all messages and emit to client---ONLY this client
         else {
-            var nameExist = false;
-            db.get('SELECT *  FROM chatting ', function(err,row){
-                nameExist = true;
-            });
-            db.get('select * from chatting', function(err,row){
-                console.log('hhhhh');
-            });
-            if(nameExist ){
-                console.log(row.name + 'returned');
-                var dt = new Date();
-                dt.setDate(dt.getDate() - 1);
-                console.log('dt');
-                db.all('SELECT name, message,time FROM chatting WHERE name = ?', [data.name],function(err, row){
-                    console.log(row.name  + row.message + row.time);
-                    //io.sockets.connected[data.id].emit('returninguser',{mess:'i will give you all messages'});
-                });
-
-                //TODO--------
-            }
-            else
-            {
-                currentusers[data.name] = data.id;
-                io.sockets.connected[data.id].emit('newuseraccepted');
-                console.log('new user login' + data.name);
-            }
-
+            currentusers[data.name] = data.id;
+            io.sockets.connected[data.id].emit('newuseraccepted');
+            checkNameAndSendMessages(data.name);
         }
-
-    })
-
+    });
 
 
+//when user left or disconnect
     socket.on('leaveRoom', function(data) {
         delete currentusers[data.name];
         console.log('a user left  '+ data.name);
@@ -118,10 +102,12 @@ io.on('connection', function(socket){
     });
 
     socket.on('IHaveSomethingNew',function(data){
-        console.log(typeof(data.time));
-        data.time.t
         socket.broadcast.emit('newmessagecoming',data);
+
+        console.log('recieve time' + data.time);
         db.run('INSERT INTO chatting (name, message, time) VALUES(?,?,?)', [data.name, data.message, data.time]);
+        console.log('send time' + data.time);
+
     })
 
 

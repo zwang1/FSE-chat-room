@@ -111,9 +111,14 @@ body {
 
 /* Messages */
 
-.chatArea {
+.leave{
     position:fixed;
     top:50px;
+    right:20px;
+}
+.chatArea {
+    position:fixed;
+    top:100px;
     right:20px;
     left:20px;
     height: 60%;

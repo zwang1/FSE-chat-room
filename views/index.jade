@@ -15,11 +15,11 @@ html
                 h3(class="form-signin-heading") Login with your name
                 input(class="username form-control" type="text" required autofocus)
                 button(class = "login btn btn-lg btn-primary btn-block", type="button") Enter chatroom
-                div(class = "failed", style="color: red") Please use another one
+                div(class = "failed", style="color: red") Please use another name
             form(class = "chat page")
-                    input(class = "leave", type="button", value="Leave")
+                    button(class = "leave btn btn-default", type="button") Leave
                     div(class = "chatArea")
                         ul(class = "messages")
                         input(class="inputMessage", placeholder="Type here...")
-                        button(class = "postbutton btn btn-success", type="button", value="Post") Post
+                        button(class = "postbutton btn btn-success", type="button") Post
 
