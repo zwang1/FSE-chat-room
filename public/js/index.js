@@ -65,10 +65,8 @@ function init() {
         $messageList.append($newMessageSectionDiv);
     }
 
-//TODO---------reload messages for re-entering user
+
     function reloadMessage(data){
-        //get back latest 10 record from sqlite record
-        //for each record call updateMessage
         var mess = JSON.parse(data.mess);
         for(var i = 0; i < mess.length; i++){
             updateMessage(mess[i]);
@@ -87,7 +85,7 @@ function init() {
     }
 
 
-// TODO ----show instructions in red little font
+
     function tryAnotherUserName(){
         $('.failed').show();
         $('.username').val('');
